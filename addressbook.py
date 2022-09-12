@@ -81,12 +81,110 @@ class AddressBook:
             logging.exception(e)
 
 
+def create_addressbook():
+    """
+    Hanging function to create address books
+    :return:
+    """
+    try:
+        book = input("Enter addressbook name : ")
+        book_obj = AddressBook(book)
+        addressbook_dict.update({book_obj.book_name: book_obj})
+        return addressbook_dict
+    except Exception as e:
+        logging.exception(e)
+
+
+def display_list_of_addressbook():
+    """
+    Hanging function to show all the address books
+    :return:
+    """
+    try:
+        print("Book_name")
+        for book_name in addressbook_dict:
+            print(book_name)
+    except Exception as e:
+        logging.exception(e)
+
+
+def add_person():
+    """
+    Hanging function to add person in different address books
+    :return:
+    """
+    try:
+        book = input("Enter addressbook name : ")
+        book_obj = addressbook_dict.get(book)
+        if book_obj is None:
+            book_obj = AddressBook(book)
+            addressbook_dict.update({book_obj.book_name: book_obj})
+        name = input("\nEnter your Name : ")
+        email = input("Enter your Email : ")
+        phone = input("Enter your Phone Number : ")
+        city = input("Enter your City Name : ")
+        state = input("Enter your State Name : ")
+
+        dict_person = {"name": name, "email": email, "phone": phone, "city": city, "state": state}
+        contact_obj = Contact(dict_person)
+        book_obj.add_contacts(contact_obj=contact_obj)
+    except Exception as e:
+        logging.exception(e)
+
+
+def display_person():
+    """
+    Hanging function to display all contacts from all address books
+    :return:
+    """
+    try:
+        book = input("Enter addressbook name : ")
+        book_obj = addressbook_dict.get(book)
+        if book_obj is None:
+            print("Addressbook doesn't exit")
+            return
+        book_obj.display_contacts()
+    except Exception as e:
+        logging.exception(e)
+
+
+def delete_person():
+    """
+    Hanging function to delete contacts from address books
+    :return:
+    """
+    try:
+        book = input("Enter addressbook name : ")
+        book_obj = addressbook_dict.get(book)
+        if book_obj is None:
+            print("Addressbook doesn't exit")
+            return
+        person_name = input("Enter person name : ")
+        book_obj.delete_record(person_name)
+    except Exception as e:
+        logging.exception(e)
+
+
 if __name__ == '__main__':
-    contact1 = Contact(
-        {"name": "Amit", "email": "amit836@gmail.com", "phone": "9936958584", "city": "Vns", "state": "UP"})
-    details1 = contact1.show_details()
-    book1 = AddressBook("my_book")
-    print(book1.add_contacts(contact1))
-    print(book1.display_contacts())
-    print(book1.delete_record("Amit"))
-    print(book1.display_contacts())
+    print("\nWelcome to Address Book Program\n ")
+    addressbook_dict = {}
+    # try:
+    choice = {
+        1: create_addressbook,
+        2: display_list_of_addressbook,
+        3: add_person,
+        4: display_person,
+        5: delete_person,
+    }
+    while True:
+        print("1.Create AddressBook \n2.Display list of Addressbook \n3.Add Person \n4.Display persons record"
+              "\n5.Update person record \n6.Delete record of person \n0.Exit")
+
+        a = int(input("Enter your choice : "))
+        if a == 0:
+            break
+        try:
+            choice.get(a)()
+        except Exception as e:
+            print(e)
+            logging.exception(e)
