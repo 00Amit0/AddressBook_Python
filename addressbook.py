@@ -1,3 +1,4 @@
+import csv
 import json
 import logging
 
@@ -201,6 +202,39 @@ def json_read():
         print(data)
 
 
+def csv_write():
+    """
+    Function to write addressbook data in csv
+    :return:
+    """
+    ab = []
+    for book_name, book_obj in addressbook_dict.items():
+        for contact_name, contact_obj in book_obj.records.items():
+            # contact_dict = contact_obj.show_details()
+            contact_dict = contact_obj.show_details().copy()
+            contact_dict.update({'book_name': book_name})
+            ab.append(contact_dict)
+    with open('csv_file.csv', 'w', newline='') as file:
+        fieldnames = ['book_name', 'name', 'email', 'phone', 'city', 'state']
+        csv_writer = csv.DictWriter(file, fieldnames=fieldnames)
+        csv_writer.writeheader()
+        for line in ab:
+            csv_writer.writerow(line)
+
+
+def csv_read():
+    """
+    Function to read data from csv
+    :return:
+    """
+    with open('csv_file.csv', 'r') as file:
+        csv_reader = csv.DictReader(file)
+        data = list(csv_reader)
+        print(data)
+        # for line in csv_reader:
+        #     print(line)
+
+
 if __name__ == '__main__':
     print("\nWelcome to Address Book Program\n ")
     addressbook_dict = {}
@@ -211,6 +245,10 @@ if __name__ == '__main__':
         3: add_person,
         4: display_person,
         5: delete_person,
+        6: json_write,
+        7: json_read,
+        8: csv_write,
+        9: csv_read
     }
     while True:
         print("1.Create AddressBook \n2.Display list of Addressbook \n3.Add Person \n4.Display persons record"
