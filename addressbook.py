@@ -1,3 +1,4 @@
+import json
 import logging
 
 logging.basicConfig(filename='Address Book.log', filemode='a', level=logging.DEBUG)
@@ -77,6 +78,19 @@ class AddressBook:
         """
         try:
             self.records.pop(name)
+        except Exception as e:
+            logging.exception(e)
+
+    def json_write(self):
+        """
+        Function to add dictionary dta into json file
+        :return:
+        """
+        try:
+            records_dict = {}
+            for k, v in self.records.items():
+                records_dict.update({k: v.show_details()})
+            return {"name": self.book_name, "records": records_dict}
         except Exception as e:
             logging.exception(e)
 
@@ -163,6 +177,28 @@ def delete_person():
         book_obj.delete_record(person_name)
     except Exception as e:
         logging.exception(e)
+
+
+def json_write():
+    """
+    Function to store addressbook details in json file
+    :return:
+    """
+    ab = {}
+    for k, v in addressbook_dict.items():
+        ab.update({k: v.json_write()})
+    with open('json_file.json', 'w') as file:
+        file.write(json.dumps(ab, indent=4, sort_keys=True))
+
+
+def json_read():
+    """
+    Function to read data from json file
+    :return:
+    """
+    with open('json_file.json', 'r') as file:
+        data = json.loads(file.read())
+        print(data)
 
 
 if __name__ == '__main__':
